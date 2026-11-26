@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #172033;
+      background: #f3f6fb;
+    }
+
+    body {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    main {
+      padding: 2rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 28px rgb(23 32 51 / 8%);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin: 1rem 0 0.35rem;
+      font-weight: 600;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid #aeb8ca;
+      border-radius: 6px;
+      font: inherit;
+    }
+
+    input[aria-invalid="true"] {
+      border-color: #b42318;
+    }
+
+    button {
+      margin-top: 1.25rem;
+      padding: 0.7rem 1rem;
+      border: 0;
+      border-radius: 6px;
+      background: #2457c5;
+      color: #fff;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1b449f;
+    }
+
+    #errors {
+      color: #b42318;
+    }
+
+    #errors:empty {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Login</h1>
+    <form id="login-form" novalidate>
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" autocomplete="username" required>
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" minlength="6" required>
+
+      <button type="submit">Login</button>
+    </form>
+    <div id="errors" role="alert" aria-live="polite"></div>
+  </main>
+
+  <script>
+    const form = document.querySelector("#login-form");
+    const username = document.querySelector("#username");
+    const password = document.querySelector("#password");
+    const errors = document.querySelector("#errors");
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const messages = [];
+      const usernameIsMissing = username.value.trim() === "";
+      const passwordIsMissing = password.value === "";
+      const passwordIsTooShort = !passwordIsMissing && password.value.length < 6;
+
+      username.setAttribute("aria-invalid", String(usernameIsMissing));
+      password.setAttribute("aria-invalid", String(passwordIsMissing || passwordIsTooShort));
+
+      if (usernameIsMissing) {
+        messages.push("Username is required.");
+      }
+      if (passwordIsMissing) {
+        messages.push("Password is required.");
+      } else if (passwordIsTooShort) {
+        messages.push("Password must be at least 6 characters.");
+      }
+
+      errors.replaceChildren();
+      if (messages.length > 0) {
+        const list = document.createElement("ul");
+        for (const message of messages) {
+          const item = document.createElement("li");
+          item.textContent = message;
+          list.append(item);
+        }
+        errors.append(list);
+        return;
+      }
+
+      alert(`Welcome, ${username.value.trim()}!`);
+    });
+  </script>
+</body>
+</html>

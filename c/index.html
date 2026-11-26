@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registration Form</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        padding: 2rem 1rem;
+        background: #f4f6f8;
+        color: #17212b;
+      }
+
+      main {
+        max-width: 32rem;
+        margin: 0 auto;
+        padding: 2rem;
+        background: #fff;
+        border-radius: 0.75rem;
+        box-shadow: 0 0.25rem 1rem rgb(0 0 0 / 8%);
+      }
+
+      h1 {
+        margin-top: 0;
+      }
+
+      .field {
+        margin-bottom: 1rem;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-weight: 600;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 0.65rem;
+        border: 1px solid #8794a1;
+        border-radius: 0.35rem;
+        font: inherit;
+      }
+
+      input[aria-invalid="true"],
+      select[aria-invalid="true"] {
+        border: 2px solid #c62828;
+      }
+
+      input[aria-invalid="false"],
+      select[aria-invalid="false"] {
+        border: 2px solid #26813b;
+      }
+
+      button {
+        padding: 0.7rem 1.1rem;
+        border: 0;
+        border-radius: 0.35rem;
+        background: #1457a6;
+        color: #fff;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      #errors {
+        margin: 0 0 1rem;
+        padding: 0.8rem 0.8rem 0.8rem 2rem;
+        border: 1px solid #c62828;
+        border-radius: 0.35rem;
+        background: #fff3f3;
+        color: #8e1717;
+      }
+
+      #errors[hidden],
+      #success[hidden] {
+        display: none;
+      }
+
+      #success {
+        color: #216b32;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Create an account</h1>
+      <form id="registration-form" novalidate>
+        <ul id="errors" role="alert" aria-live="assertive" hidden></ul>
+
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="new-password" required>
+        </div>
+
+        <div class="field">
+          <label for="confirm-password">Confirm password</label>
+          <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" required>
+        </div>
+
+        <div class="field">
+          <label for="city">City</label>
+          <select id="city" name="city" required>
+            <option value="">Select a city</option>
+            <option value="tashkent">Tashkent</option>
+            <option value="samarkand">Samarkand</option>
+            <option value="bukhara">Bukhara</option>
+            <option value="andijan">Andijan</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <button type="submit">Register</button>
+        <p id="success" role="status" hidden>All fields are valid. Registration is ready to submit.</p>
+      </form>
+    </main>
+
+    <script>
+      const form = document.querySelector("#registration-form");
+      const fields = [...form.querySelectorAll("input, select")];
+      const errorsElement = document.querySelector("#errors");
+      const successElement = document.querySelector("#success");
+
+      function getError(field) {
+        const value = field.value.trim();
+
+        if (!value) {
+          return `${field.labels[0].textContent} is required.`;
+        }
+
+        if (field.id === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          return "Enter a valid email address.";
+        }
+
+        if (field.id === "phone" && !/^\d{10}$/.test(field.value)) {
+          return "Phone must contain exactly 10 digits.";
+        }
+
+        if (field.id === "password" && field.value.length < 8) {
+          return "Password must be at least 8 characters.";
+        }
+
+        if (
+          field.id === "confirm-password" &&
+          field.value !== document.querySelector("#password").value
+        ) {
+          return "Passwords do not match.";
+        }
+
+        return "";
+      }
+
+      fields.forEach((field) => {
+        field.addEventListener("blur", () => {
+          const error = getError(field);
+          field.setAttribute("aria-invalid", String(Boolean(error)));
+        });
+
+        field.addEventListener("input", () => {
+          successElement.hidden = true;
+          if (!errorsElement.hidden) {
+            errorsElement.hidden = true;
+            errorsElement.replaceChildren();
+          }
+        });
+
+        field.addEventListener("change", () => {
+          successElement.hidden = true;
+          if (!errorsElement.hidden) {
+            errorsElement.hidden = true;
+            errorsElement.replaceChildren();
+          }
+        });
+      });
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const errors = [];
+
+        fields.forEach((field) => {
+          const error = getError(field);
+          field.setAttribute("aria-invalid", String(Boolean(error)));
+          if (error) errors.push(error);
+        });
+
+        successElement.hidden = errors.length > 0;
+        errorsElement.hidden = errors.length === 0;
+        errorsElement.replaceChildren(
+          ...errors.map((error) => {
+            const item = document.createElement("li");
+            item.textContent = error;
+            return item;
+          })
+        );
+      });
+    </script>
+  </body>
+</html>

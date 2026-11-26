@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Technology Quiz</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, sans-serif;
+      color: #172033;
+      background: #f3f6fb;
+    }
+
+    body {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    main {
+      padding: 2rem;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 28px rgb(23 32 51 / 8%);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    fieldset {
+      margin: 1.25rem 0;
+      padding: 1rem;
+      border: 1px solid #d5dbea;
+      border-radius: 8px;
+    }
+
+    legend {
+      padding: 0 0.35rem;
+      font-weight: 650;
+    }
+
+    label {
+      display: block;
+      margin: 0.55rem 0;
+      cursor: pointer;
+    }
+
+    input {
+      margin-right: 0.45rem;
+    }
+
+    button {
+      padding: 0.7rem 1rem;
+      border: 0;
+      border-radius: 6px;
+      background: #2457c5;
+      color: #fff;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1b449f;
+    }
+
+    #result {
+      min-height: 1.5em;
+      margin-bottom: 0;
+      font-weight: 650;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Web Technology Quiz</h1>
+    <p>Answer all five questions, then submit to see your score. A score of 3/5 or higher is a pass.</p>
+
+    <form id="quiz">
+      <fieldset>
+        <legend>1. What does HTML stand for?</legend>
+        <label><input type="radio" name="q1" value="a"> Hyper Trainer Marking Language</label>
+        <label><input type="radio" name="q1" value="b"> HyperText Markup Language</label>
+        <label><input type="radio" name="q1" value="c"> HyperText Markdown Language</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. Which language is used to style web pages?</legend>
+        <label><input type="radio" name="q2" value="a"> CSS</label>
+        <label><input type="radio" name="q2" value="b"> SQL</label>
+        <label><input type="radio" name="q2" value="c"> Python</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Which HTML element creates a hyperlink?</legend>
+        <label><input type="radio" name="q3" value="a"> &lt;link&gt;</label>
+        <label><input type="radio" name="q3" value="b"> &lt;href&gt;</label>
+        <label><input type="radio" name="q3" value="c"> &lt;a&gt;</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>4. Which keyword declares a block-scoped variable in JavaScript?</legend>
+        <label><input type="radio" name="q4" value="a"> let</label>
+        <label><input type="radio" name="q4" value="b"> varname</label>
+        <label><input type="radio" name="q4" value="c"> define</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>5. What does HTTP primarily define?</legend>
+        <label><input type="radio" name="q5" value="a"> A database query language</label>
+        <label><input type="radio" name="q5" value="b"> A protocol for transferring web resources</label>
+        <label><input type="radio" name="q5" value="c"> A programming language for browsers</label>
+      </fieldset>
+
+      <button type="submit">Submit answers</button>
+      <p id="result" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+
+  <script>
+    const answers = ["b", "a", "c", "a", "b"];
+    const quiz = document.querySelector("#quiz");
+    const result = document.querySelector("#result");
+
+    quiz.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      let score = 0;
+      for (let i = 0; i < answers.length; i++) {
+        const selected = quiz.querySelector(`[name="q${i + 1}"]:checked`);
+        if (selected && selected.value === answers[i]) {
+          score++;
+        }
+      }
+
+      const passed = score >= 3;
+      result.textContent = `Score: ${score}/5 — ${passed ? "Pass!" : "Fail. Try again!"}`;
+    });
+  </script>
+</body>
+</html>
